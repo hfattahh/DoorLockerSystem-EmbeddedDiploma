@@ -48,7 +48,7 @@ ISR(TIMER0_COMP_vect){
 
 
 /*******************************************************************************
- *                      Functions Definition                                   *
+ *                      Functions Prototypes                                   *
  *******************************************************************************/
 /*
  * Description : Function to initialize the Timer driver

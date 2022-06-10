@@ -1,33 +1,15 @@
-05:06:46 **** Incremental Build of configuration Debug for project door_locker_HMI_ECU ****
+05:22:19 **** Incremental Build of configuration Debug for project door_locker_HMI_ECU ****
 make all 
-Building file: ../timers.c
-Invoking: AVR Compiler
-avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"timers.d" -MT"timers.o" -c -o "timers.o" "../timers.c"
-../timers.c: In function 'TIMERS_setCallBack':
-../timers.c:110: warning: function return types not compatible due to 'volatile'
-../timers.c:112: warning: function return types not compatible due to 'volatile'
-../timers.c:114: warning: function return types not compatible due to 'volatile'
-Finished building: ../timers.c
- 
-Building target: door_locker_HMI_ECU.elf
-Invoking: AVR C Linker
-avr-gcc -Wl,-Map,door_locker_HMI_ECU.map -mmcu=atmega16 -o "door_locker_HMI_ECU.elf"  ./gpio.o ./lcd.o ./timer0_driver_test.o ./timers.o   
-Finished building target: door_locker_HMI_ECU.elf
- 
-Invoking: AVR Create Extended Listing
-avr-objdump -h -S door_locker_HMI_ECU.elf  >"door_locker_HMI_ECU.lss"
-Finished building: door_locker_HMI_ECU.lss
- 
 Invoking: Print Size
 avr-size --format=avr --mcu=atmega16 door_locker_HMI_ECU.elf
 AVR Memory Usage
 ----------------
 Device: atmega16
 
-Program:    8410 bytes (51.3% Full)
+Program:    8486 bytes (51.8% Full)
 (.text + .data + .bootloader)
 
-Data:         27 bytes (2.6% Full)
+Data:         28 bytes (2.7% Full)
 (.data + .bss + .noinit)
 
 

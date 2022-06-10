@@ -18,15 +18,11 @@
 #include "common_macros.h"
 #include "gpio.h"
 
-#define CTC_TEST
+#define OVERFLOW_TEST
 #define no_tics_per_second_in_overflow 4
 
 uint8 g_overflowCounter = 0;
-boolean g_CTC_state = 0;
 
-/*******************************************************************************
- *                      Functions Definition                                   *
- *******************************************************************************/
 void wait_using_overflow(void){
 	/* assign TCNT0 to 5 after every overflow, so overflow = 250msec */
 	TCNT0 = 5;
@@ -35,15 +31,9 @@ void wait_using_overflow(void){
 
 	g_overflowCounter++;
 }
-void wait_using_CTC(void){
-	if(g_CTC_state == 0){
-		g_CTC_state = 1;
-	}
-	else{
-		g_CTC_state = 0;
-	}
 
-}
+
+
 
 
 int main(){
@@ -61,11 +51,9 @@ int main(){
 #ifdef OVERFLOW_TEST
 	TIMERS_init(&timer0_overflow_config, TIMER0_ID);
 	TIMERS_setCallBack(wait_using_overflow, TIMER0_ID);
-#endif /*overflow_test*/
-#ifdef CTC_TEST
-	TIMERS_init(&timer0_CTC_config, TIMER0_ID);
-	TIMERS_setCallBack(wait_using_CTC, TIMER0_ID);
-#endif /*CTC test*/
+#elif CTC_TEST
+
+#endif
 
 
 	for(;;){
@@ -73,19 +61,9 @@ int main(){
 		if(g_overflowCounter >= no_tics_per_second_in_overflow){
 			TOGGLE_BIT(PORTC, 0);
 		}
-#endif /*overflow_test*/
-#ifdef CTC_TEST
-		switch(g_CTC_state){
-		case 0:
-			GPIO_writePin(PORTC_ID, PIN0_ID, LOGIC_LOW);
-			break;
-		case 1:
-			GPIO_writePin(PORTC_ID, PIN0_ID, LOGIC_HIGH);
-			break;
+#elif CTC_TEST
 
-		}
-
-#endif /*CTC test*/
+#endif
 
 	}
 

@@ -46,6 +46,7 @@ void wait_using_CTC(void){
 }
 
 
+
 int main(){
 
 	/*set PC0 pin as output and initialize it with logic low*/
@@ -64,7 +65,7 @@ int main(){
 #endif /*overflow_test*/
 #ifdef CTC_TEST
 	TIMERS_init(&timer0_CTC_config, TIMER0_ID);
-	TIMERS_setCallBack(wait_using_CTC, TIMER0_ID);
+	TIMERS_setCallBack(a_ptr, TIMER0_ID);
 #endif /*CTC test*/
 
 
