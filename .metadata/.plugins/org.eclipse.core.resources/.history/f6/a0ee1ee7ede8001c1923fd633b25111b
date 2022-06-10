@@ -138,12 +138,12 @@ void TIMERS_DeInit(TIMERS_Select timer_no){
 	else if(timer_no == TIMER1_ID){
 		TCCR1A = 0;
 		TCCR1B = 0;
-		TIMSK &= 0xC3;
+		TIMSK &= 0xFC;
 	}
 	else if(timer_no == TIMER2_ID)
 	{
 		TCCR2 = 0;
-		TIMSK &= 0x3F;
+		TIMSK &= 0xFC;
 	}
 
 }

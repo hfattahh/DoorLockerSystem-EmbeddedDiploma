@@ -131,20 +131,14 @@ void clearTimerValue(TIMERS_Select timer_no){
  * Description: Function to disable a timer
  */
 void TIMERS_DeInit(TIMERS_Select timer_no){
-	if (timer_no == TIMER0_ID){
+	if (timer_no == TIMER0_ID)
 		TCCR0 = 0;
-		TIMSK &= 0xFC;
-	}
 	else if(timer_no == TIMER1_ID){
 		TCCR1A = 0;
 		TCCR1B = 0;
-		TIMSK &= 0xC3;
 	}
 	else if(timer_no == TIMER2_ID)
-	{
 		TCCR2 = 0;
-		TIMSK &= 0x3F;
-	}
 
 }
 

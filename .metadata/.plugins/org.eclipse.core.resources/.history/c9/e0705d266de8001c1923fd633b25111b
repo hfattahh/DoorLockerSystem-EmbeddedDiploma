@@ -12,7 +12,6 @@
  *
  *******************************************************************************/
 #ifdef timer_driver_test_phase
-
 #include <avr/io.h> /*to use register such as SREG*/
 #include "timers.h"
 #include "std_types.h"
