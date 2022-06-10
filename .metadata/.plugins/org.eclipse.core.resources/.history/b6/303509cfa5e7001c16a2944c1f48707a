@@ -1,0 +1,98 @@
+/******************************************************************************
+ *
+ * Module: AtMega16_timers
+ *
+ * File Name: ATMEGA16_timers.c
+ *
+ * Description: Source file for the AVR ATMega16 timers driver
+ * 				that file includes functions to operate atmega16 timers0
+ * Future paln: add Timers1, and 2
+ *
+ * Created on: Jun 9, 2022
+ *
+ * Author: Hassan Khodeir
+ *
+ *******************************************************************************/
+#include "timers.h"
+
+#include "std_types.h" /*to use standard types like uint8*/
+#include "common_macros.h" /* To use the macros like SET_BIT */
+#include <avr/io.h> /*for Timers register*/
+#include <avr/interrupt.h>/*for Timers ISR*/
+/*******************************************************************************
+ *                           Global Variables                                  *
+ *******************************************************************************/
+
+/* Global variables to hold the address of the call back function in the application */
+static volatile void (*g_timer0CallBackPtr)(void) = NULL_PTR;
+//static volatile void (*g_timer1CallBackPtr)(void) = NULL_PTR;
+//static volatile void (*g_timer2CallBackPtr)(void) = NULL_PTR;
+
+ISR(TIMER1_CAPT_vect){
+	if(g_timer0CallBackPtr != NULL_PTR){
+
+	}
+
+}
+
+
+/*******************************************************************************
+ *                      Functions Prototypes                                   *
+ *******************************************************************************/
+/*
+ * Description : Function to initialize the Timer driver
+ * 	1. Set the required clock.
+ * 	2. Set the required Mode.
+ * 	3. Set timer initial Value.
+ * 	4. Set timer compare value
+ */
+void TIMERS_init(const TIMERS_ConfigType * Timer_Config_Ptr, TIMERS_Select timer_no){
+	switch(timer_no){
+	case TIMER0:
+		/*
+		 * TCCR0:
+		 * BIT7 FOC0 => 1 non_PWM
+		 * BIT3,6 WGM01:0 => Normal mode => 0,0
+		 * BIT3,6 WGM01:0 => CTC mode => 1,0
+		 * Bit 5:4 – COM01:0 => 0,0 non_PWM
+		 * Bit 2:0 – CS02:0: Clock Select "prescalers"
+		 */
+		TCCR0 = (0xF8 & Timer_Config_Ptr->clock);
+		TCNT0 = Timer_Config_Ptr->timer_init_value;
+		Timer_Config_Ptr->
+		switch(Timer_Config_Ptr->mode){
+		case NORMAL_MODE:
+			TCCR0 |= (1<<FOC0);
+			break;
+		case CTC_MODE:
+			break;
+		}
+		break;
+	case TIMER1:
+		break;
+	case TIMER2:
+		break;
+	}
+}
+
+/*
+ * Description: Function to set the Call Back function address for each timer.
+ */
+void TIMERS_setCallBack(void(*a_ptr)(void), TIMERS_Select timer_no){
+
+}
+
+/*
+ * Description: Function to clear a timer Value to start count from ZERO
+ */
+void Icu_clearTimerValue(void){
+
+}
+
+/*
+ * Description: Function to disable a timer
+ */
+void TIMERS_DeInit(TIMERS_Select timer_no){
+
+}
+

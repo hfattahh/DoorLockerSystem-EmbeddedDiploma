@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">&#x0A;<refactoring comment="Rename resource &apos;door_locker_HMI_ECU/ATMEGA16_timers.c&apos; to &apos;timers.c&apos;" description="Rename resource &apos;ATMEGA16_timers.c&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="ATMEGA16_timers.c" name="timers.c" stamp="1654735844681" updateReferences="true"/>&#x0A;<refactoring comment="Rename resource &apos;door_locker_HMI_ECU/ATMEGA16_timers.h&apos; to &apos;timers.h&apos;" description="Rename resource &apos;ATMEGA16_timers.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="ATMEGA16_timers.h" name="timers.h" stamp="1654735851728" updateReferences="true"/>
+</session>

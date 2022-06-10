@@ -1,0 +1,13 @@
+/******************************************************************************
+ *
+ * Module: AtMega16_timers
+ *
+ * File Name: ATMEGA16_timers.h
+ *
+ * Description: Header file for the AVR ATMega16 timers driver
+ *
+ * Created on: Jun 9, 2022
+ *
+ * Author: Hassan Khodeir
+ *
+ *******************************************************************************/
