@@ -5,21 +5,30 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../gpio.c \
+../hmi_ecu.c \
+../keypad.c \
 ../lcd.c \
 ../timer0_driver_test.c \
-../timers.c 
+../timers.c \
+../uart.c 
 
 OBJS += \
 ./gpio.o \
+./hmi_ecu.o \
+./keypad.o \
 ./lcd.o \
 ./timer0_driver_test.o \
-./timers.o 
+./timers.o \
+./uart.o 
 
 C_DEPS += \
 ./gpio.d \
+./hmi_ecu.d \
+./keypad.d \
 ./lcd.d \
 ./timer0_driver_test.d \
-./timers.d 
+./timers.d \
+./uart.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

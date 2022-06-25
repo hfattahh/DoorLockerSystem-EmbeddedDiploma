@@ -6,8 +6,9 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="Icu_EdgeType"/>
+		<item key="selection" value="Bool"/>
 		<list key="findhistory">
+			<item value="bool"/>
 			<item value="Icu_EdgeType"/>
 		</list>
 		<list key="replacehistory">
