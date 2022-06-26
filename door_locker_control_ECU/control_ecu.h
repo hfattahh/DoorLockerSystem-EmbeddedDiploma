@@ -24,11 +24,16 @@
  * [Returns] :
  *                    Return 1 if password set
  *                    Return 0 if password is not set
- *
- *
  *************************************************************************/
 
 uint8 check_password_setting_status(void);
-
+/******************************************************************
+ * [Function Name] : receivePass
+ * [Description] : This function receive password from HMI by UART module
+ * [Args] : non
+ * [in] uint8 *pass: pointer to string to store the received password
+ * [Returns] :
+ ****************************************************/
+void receive_password_from_HMI(uint8 *pass);
 
 #endif /* CONTROL_ECU_H_ */

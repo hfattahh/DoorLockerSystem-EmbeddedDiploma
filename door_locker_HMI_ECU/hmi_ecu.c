@@ -33,9 +33,9 @@ uint8 password[PASSCODE_SIZE] = {'\0'};
 
 
 int main(void){
-	/*password[]  -> array holds the entered password by user
-	 *confirmPassword[] -> array holds the confirmation password that entered by user
-	 *receivedByte     -> variable to hold byte that received from master throw UART
+	/* password[]  -> array holds the entered password by user
+	 * confirmPassword[] -> array holds the confirmation password that entered by user
+	 * receivedByte     -> variable to hold byte that received from master throw UART
 	 *
 	 */
 	uint8 password[PASSCODE_SIZE] = {'\0'};
@@ -52,26 +52,36 @@ int main(void){
 
 	/*receive if password set or not*/
 	receivedByte = UART_recieveByte();
-	/*if not set  call function set password*/
-	switch(receivedByte){
-	/*********************setting password*********************/
-	case PASSWORD_NOT_SET:
-		/*enter password by user and store it in an array*/
-		enter_passcode(password);
-		/*confirm password by user and store it in an array*/
-		enter_passcode(confirmPassword);
-		/*send set password command to control ECU*/
-		UART_sendByte(SET_PASSWORD);
-		/*wait to control ECU to be ready*/
-		while(!(UART_recieveByte() == EUC2_READY));
-		/*send password to control ECU*/
-		send_password_to_control_ECU(password);
-		while(!(UART_recieveByte() == EUC2_READY));
-		/*send password to control ECU*/
-		send_password_to_control_ECU(confirmPassword);
-		break;
-	default:
-		break;
+	/*if not set then, set password*/
+	if(receivedByte == PASSWORD_NOT_SET)
+	{
+		/**/
+		receivedByte = PASSWORD_NOT_IDENTICAL;
+
+		do{
+			/*********************setting password*********************/
+			/*enter password by user and store it in an array*/
+			enter_passcode(password);
+			/*confirm password by user and store it in an array*/
+			enter_passcode(confirmPassword);
+			/******* SEND passwords to control ECU *******/
+			/*send set password command to control ECU*/
+			UART_sendByte(SET_PASSWORD);
+			/***wait to control ECU to be ready***/
+			while(!(UART_recieveByte() == EUC2_READY));
+			/*send password to control ECU*/
+			send_password_to_control_ECU(password);
+			/***wait to control ECU to be ready***/
+			while(!(UART_recieveByte() == EUC2_READY));
+			/*send password to control ECU*/
+			send_password_to_control_ECU(confirmPassword);
+			receivedByte = UART_recieveByte();
+#ifdef TESTING_PAHSE
+			LCD_clearScreen();
+			LCD_displayString("PASSWORD NOT IDENTICAL!");
+#endif
+		}
+		while(receivedByte == PASSWORD_NOT_IDENTICAL);
 	}
 #ifdef TESTING_PAHSE
 	LCD_clearScreen();

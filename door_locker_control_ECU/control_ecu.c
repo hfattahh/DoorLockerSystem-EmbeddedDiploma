@@ -29,17 +29,30 @@ uint8 password[PASSCODE_SIZE] = {'\0'};
 
 
 int main(void){
-	uint8 receviedByte, passwordSettingState;
+	/* password[]  			-> array holds the entered password by user
+	 * confirmPassword[] 	-> array holds the confirmation password that entered by user
+	 * receivedByte      	-> variable to hold byte that received from master throw UART
+	 * passwordSettingState	-> uint8 variable to store if password is setting before or not
+	 * index				-> index used as for loop counter
+	 *
+	 */
+	uint8 password[PASSCODE_SIZE] = {'\0'};
+	uint8 confirmPassword[PASSCODE_SIZE] = {'\0'};
+	uint8 receivedByte = DUMMY_CHAR;
+	uint8 passwordSettingState;
+	uint8 index;
+
+	/*initialize UART with baud rate 9600*/
 	UART_init(9600);
 
 
 	while(1)
 	{
 		/*receive byte from HMI ECU*/
-		receviedByte = UART_recieveByte();
+		receivedByte = UART_recieveByte();
 
 		/*switch case on received byte*/
-		switch(receviedByte)
+		switch(receivedByte)
 		{
 		case CHECK_PASSWORD_SETTING:
 			/*call check password setting function*/
@@ -47,25 +60,38 @@ int main(void){
 			/*if password setting state = 1 > send(set)
 			 * else if = 0 > send(not set)
 			 */
-			if(passwordSettingState == 1){
+			if(passwordSettingState){
 				UART_sendByte(PASSWORD_SET);
 			}
-			else if (passwordSettingState){
+			else if (!passwordSettingState){
 				UART_sendByte(PASSWORD_NOT_SET);
 			}
+			break;
+		case SET_PASSWORD:
+			/*receive two passwords form HMI*/
+			UART_sendByte(EUC2_READY);
+			receive_password_from_HMI(password);
+			UART_sendByte(EUC2_READY);
+			receive_password_from_HMI(confirmPassword);
+			for(index = 0; index < PASSCODE_SIZE ; index++)
+			{
+				if(password[index] != confirmPassword[index]){
+					UART_sendByte(PASSWORD_NOT_IDENTICAL);
+					break;
+				}
+			}
+			UART_sendByte(PASSWORD_IDENTICAL);
 			break;
 		case CHECK_PASSWORD_MATCH:
 			/*call match password function*/
 			break;
-		case SET_PASSWORD:
-			/*receive to passwords form HMI,*/
 		case OPEN_DOOR:
 			/*open door for 1 minutes*/
 			break;
 		default:
 			break;
 		}
-		receviedByte  = DUMMY_CHAR;
+		receivedByte  = DUMMY_CHAR;
 
 
 	}
@@ -93,5 +119,20 @@ uint8 check_password_setting_status(void)
 	/*if there is one => return 1; (set)
 	 *if there is 0 => return 0 (not set)
 	 */
-	return 1; /*just in testing phase*/
+	return 0; /*just in testing phase*/
+}
+
+/******************************************************************
+ * [Function Name] : receivePass
+ * [Description] : This function receive password from HMI by UART module
+ * [Args] : non
+ * [in] uint8 *pass: pointer to string to store the received password
+ * [Returns] :
+ ****************************************************/
+void receive_password_from_HMI(uint8 *pass)
+{
+	uint8 i;
+	for(i = 0; i<PASSCODE_SIZE;i++){
+		pass[i] = UART_recieveByte();
+	}
 }
