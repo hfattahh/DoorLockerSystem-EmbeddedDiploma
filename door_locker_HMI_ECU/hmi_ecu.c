@@ -33,14 +33,16 @@ uint8 password[PASSCODE_SIZE] = {'\0'};
 
 
 int main(void){
-	/* password[]  -> array holds the entered password by user
-	 * confirmPassword[] -> array holds the confirmation password that entered by user
+	/* password[]  		-> array holds the entered password by user
+	 * confirmPassword[]-> array holds the confirmation password that entered by user
 	 * receivedByte     -> variable to hold byte that received from master throw UART
+	 * userInput		-> variable to get user input + or -
 	 *
 	 */
 	uint8 password[PASSCODE_SIZE] = {'\0'};
 	uint8 confirmPassword[PASSCODE_SIZE] = {'\0'};
 	uint8 receivedByte = DUMMY_CHAR;
+	uint8 userInput = DUMMY_CHAR;
 
 	/*initialize the LCD*/
 	LCD_init();
@@ -55,7 +57,7 @@ int main(void){
 	/*if not set then, set password*/
 	if(receivedByte == PASSWORD_NOT_SET)
 	{
-		/**/
+		/*repeat entering password until user enter 2 identical passwords*/
 		receivedByte = PASSWORD_NOT_IDENTICAL;
 
 		do{
@@ -91,6 +93,33 @@ int main(void){
 
 	while(1)
 	{
+		/*
+		 * display +, and -
+		 * wait for user input
+		 * check the password
+		 * count wrong entered password
+		 * serve the user if correct password was entered
+		 * **** the user if wrong password was entered
+		 */
+		LCD_clearScreen();
+		LCD_displayString("+  Open Door");
+		LCD_moveCursor(1, 0);
+		LCD_displayString("-  Change Password");
+		userInput = KEYPAD_getPressedKey();
+		if(userInput == OPEN_DOOR)
+		{
+			/*send open_door command throw UART*/
+			UART_sendByte(OPEN_DOOR);
+
+		}
+		else if (userInput == SET_PASSWORD)
+		{
+			/*send set_password command throw UART*/
+			UART_sendByte(SET_PASSWORD);
+
+
+		}
+
 	}
 }
 
@@ -99,6 +128,15 @@ int main(void){
 /*******************************************************************************
  *                      Functions Definition                                   *
  *******************************************************************************/
+/************************************************************************************************
+ * [Function Name] : enter_passcode
+ * [Description] : get Password from user
+ * [Args] :
+ * [in]       : uint8* passCodeString , pointer to string to store entered password
+ * [Returns] : No Returns
+ *
+ *
+ **************************************************************************************************/
 void enter_passcode(uint8* passCodeString){
 	int key;
 	LCD_clearScreen();
@@ -124,13 +162,11 @@ void enter_passcode(uint8* passCodeString){
  */
 
 /************************************************************************************************
- * [Function Name] : set_password
- * [Description] : get password, confirm password, check if 2 password is identical
- * 				   if identical => continue
- * 				   else => return
- * [Args] :
- * [in]        No Input
- * [Returns] : No Returns
+ * [Function Name] 	: send_password_to_control_ECU
+ * [Description] 	: function to send string to control ECU
+ * [Args] 			:
+ * [in]        		: pointer to string (password)
+ * [Returns] 		: No Returns
  *
  *
  **************************************************************************************************/
