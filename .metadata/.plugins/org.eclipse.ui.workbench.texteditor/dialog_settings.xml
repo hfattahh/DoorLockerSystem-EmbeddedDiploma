@@ -6,8 +6,10 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="-"/>
+		<item key="selection" value="LCD_display"/>
 		<list key="findhistory">
+			<item value="LCD_display"/>
+			<item value="g_ticks"/>
 			<item value="-"/>
 			<item value="confirmPassword"/>
 			<item value="enter_passcode"/>
@@ -21,7 +23,7 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="810"/>
+		<item key="DIALOG_X_ORIGIN" value="956"/>
 		<item key="DIALOG_Y_ORIGIN" value="295"/>
 		<item key="DIALOG_WIDTH" value="414"/>
 		<item key="DIALOG_HEIGHT" value="454"/>

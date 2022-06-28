@@ -82,5 +82,10 @@ void clearTimerValue(TIMERS_Select timer_no);
  */
 void TIMERS_DeInit(TIMERS_Select timer_no);
 
+/*
+ * Description: Function to set initial value for TIMER/COUNTER Register
+ */
+void setTimerValue(TIMERS_Select timer_no, uint16 a_value);
+
 
 #endif /* TIMERS_H_ */

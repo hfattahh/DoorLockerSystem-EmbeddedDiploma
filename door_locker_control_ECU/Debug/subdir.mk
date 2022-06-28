@@ -5,18 +5,21 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../control_ecu.c \
+../dcmotor.c \
 ../gpio.c \
 ../timers.c \
 ../uart.c 
 
 OBJS += \
 ./control_ecu.o \
+./dcmotor.o \
 ./gpio.o \
 ./timers.o \
 ./uart.o 
 
 C_DEPS += \
 ./control_ecu.d \
+./dcmotor.d \
 ./gpio.d \
 ./timers.d \
 ./uart.d 

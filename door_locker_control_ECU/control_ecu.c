@@ -19,14 +19,14 @@
 #include "util/delay.h"
 #include "uart.h"
 #include "door_locker_protocol.h"
+#include "dcmotor.h"
 
 #define TESTING_PAHSE
 
 /*******************************************************************************
  *                      Global Variables                                       *
  *******************************************************************************/
-uint8 password[PASSCODE_SIZE] = {'\0'};
-
+uint8 g_timer0_ticks = 0;
 
 int main(void){
 	/* password[]  			-> array holds the entered password by user
@@ -44,6 +44,19 @@ int main(void){
 
 	/*initialize UART with baud rate 9600*/
 	UART_init(9600);
+
+	/*enable i-bit*/
+	SREG |= (1<<7);
+	/*Configuration structure for timer0 CTC mode*/
+	TIMERS_ConfigType timer0_overflow_config = {F_CPU_1024, OVERFLOW_MODE, 5, NO_COMP_VALUE};
+	/*initialize timer */
+	TIMERS_init(&timer0_overflow_config, TIMER0_ID);
+	/*set call back function for timer0*/
+	TIMERS_setCallBack(timer0_handler, TIMER0_ID);
+
+
+	/*initialize DC motor */
+	DcMotor_Init();
 
 
 	while(1)
@@ -89,7 +102,8 @@ int main(void){
 			UART_sendByte(check_password_match(password));
 			break;
 		case OPEN_DOOR:
-			/*open door for 1 minutes*/
+			/*open door for 3 seconds*/
+			open_door();
 
 			break;
 		default:
@@ -165,4 +179,42 @@ uint8 check_password_match(uint8 *pass)
 		}
 	}
 	return PASSWORD_MATCH;
+}
+
+/******************************************************************
+ * [Function Name] : timer0_handler
+ * [Description] : function to handle
+ * [Args] : non
+ * [in]: non
+ * [Returns] : non
+ ****************************************************/
+void timer0_handler(void){
+	setTimerValue(TIMER0_ID, 5);
+	g_timer0_ticks++;
+}
+/******************************************************************
+ * [Function Name] : open_door
+ * [Description] : function to open the door using DC-motor
+ * [Args] : non
+ * [in]: non
+ * [Returns] : non
+ ****************************************************/
+void open_door(void){
+	/*rotate motor for 15 seconds CW*/
+	g_timer0_ticks = 0;
+	DcMotor_Rotate(DC_CW);
+	while(g_timer0_ticks < 60);
+
+	/*hold motor for 3 seconds */
+	g_timer0_ticks = 0;
+	DcMotor_Rotate(DC_STOP);
+	while(g_timer0_ticks < 12);
+
+	/*rotate motor for 15 seconds CCW*/
+	g_timer0_ticks = 0;
+	DcMotor_Rotate(DC_A_CW);
+	while(g_timer0_ticks < 60);
+
+	/*Stop Motor*/
+	DcMotor_Rotate(DC_STOP);
 }

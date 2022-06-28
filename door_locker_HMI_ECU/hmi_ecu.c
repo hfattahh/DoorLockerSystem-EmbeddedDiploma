@@ -147,7 +147,7 @@ int main(void)
 						UART_sendByte(OPEN_DOOR);
 						LCD_clearScreen();
 						LCD_displayString("Opening the door");
-						_delay_ms(50);
+						_delay_ms(30000);
 						break;
 					case SET_PASSWORD:
 						/*dispaly setup new pass*/

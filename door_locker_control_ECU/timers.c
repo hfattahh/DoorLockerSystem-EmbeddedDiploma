@@ -148,3 +148,15 @@ void TIMERS_DeInit(TIMERS_Select timer_no){
 
 }
 
+
+/*
+ * Description: Function to set initial value for TIMER/COUNTER Register
+ */
+void setTimerValue(TIMERS_Select timer_no, uint16 a_value){
+	if (timer_no == TIMER0_ID)
+		TCNT0 = a_value;
+	else if(timer_no == TIMER1_ID)
+		TCNT1 = a_value;
+	else if(timer_no == TIMER2_ID)
+		TCNT2 = a_value;
+}

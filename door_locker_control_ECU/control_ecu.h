@@ -35,6 +35,7 @@ uint8 check_password_setting_status(void);
  * [Returns] :
  ****************************************************/
 void receive_password_from_HMI(uint8 *pass);
+
 /******************************************************************
  * [Function Name] : check_password_match
  * [Description] : check if password match the saved password in eeprom
@@ -43,5 +44,23 @@ void receive_password_from_HMI(uint8 *pass);
  * [Returns] : password matching status
  ****************************************************/
 uint8 check_password_match(uint8 *pass);
+
+/******************************************************************
+ * [Function Name] : timer0_handler
+ * [Description] : function to handle
+ * [Args] : non
+ * [in]: non
+ * [Returns] : non
+ ****************************************************/
+void timer0_handler(void);
+/******************************************************************
+ * [Function Name] : open_door
+ * [Description] : function to open the door using DC-motor
+ * [Args] : non
+ * [in]: non
+ * [Returns] : non
+ ****************************************************/
+void open_door(void);
+
 
 #endif /* CONTROL_ECU_H_ */
