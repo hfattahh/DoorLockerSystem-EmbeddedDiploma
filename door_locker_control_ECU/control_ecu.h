@@ -35,5 +35,13 @@ uint8 check_password_setting_status(void);
  * [Returns] :
  ****************************************************/
 void receive_password_from_HMI(uint8 *pass);
+/******************************************************************
+ * [Function Name] : check_password_match
+ * [Description] : check if password match the saved password in eeprom
+ * [Args] : non
+ * [in] uint8 *pass: pointer to string of password that required to be checked
+ * [Returns] : password matching status
+ ****************************************************/
+uint8 check_password_match(uint8 *pass);
 
 #endif /* CONTROL_ECU_H_ */

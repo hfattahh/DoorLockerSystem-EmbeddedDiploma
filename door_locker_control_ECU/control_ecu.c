@@ -20,7 +20,7 @@
 #include "uart.h"
 #include "door_locker_protocol.h"
 
-#define DEVELOPMENT_PHASE
+#define TESTING_PAHSE
 
 /*******************************************************************************
  *                      Global Variables                                       *
@@ -83,10 +83,14 @@ int main(void){
 			UART_sendByte(PASSWORD_IDENTICAL);
 			break;
 		case CHECK_PASSWORD_MATCH:
+			UART_sendByte(EUC2_READY);
+			receive_password_from_HMI(password);
 			/*call match password function*/
+			UART_sendByte(check_password_match(password));
 			break;
 		case OPEN_DOOR:
 			/*open door for 1 minutes*/
+
 			break;
 		default:
 			break;
@@ -119,11 +123,11 @@ uint8 check_password_setting_status(void)
 	/*if there is one => return 1; (set)
 	 *if there is 0 => return 0 (not set)
 	 */
-	return 0; /*just in testing phase*/
+	return 1; /*just in testing phase*/
 }
 
 /******************************************************************
- * [Function Name] : receivePass
+ * [Function Name] : receive_password_from_HMI
  * [Description] : This function receive password from HMI by UART module
  * [Args] : non
  * [in] uint8 *pass: pointer to string to store the received password
@@ -135,4 +139,30 @@ void receive_password_from_HMI(uint8 *pass)
 	for(i = 0; i<PASSCODE_SIZE;i++){
 		pass[i] = UART_recieveByte();
 	}
+}
+/******************************************************************
+ * [Function Name] : check_password_match
+ * [Description] : check if password match the saved password in eeprom
+ * [Args] : non
+ * [in] uint8 *pass: pointer to string of password that required to be checked
+ * [Returns] : password matching status
+ ****************************************************/
+uint8 check_password_match(uint8 *pass)
+{
+#ifdef TESTING_PAHSE
+	uint8 password [PASSCODE_SIZE]= {'2','2','2','2','2','\0'};
+#elif
+	uint8 password[PASSCODE_SIZE]; /*to get passord from eeprom*/
+#endif
+	/*
+	 * password => get stored password from EEPROM
+	 */
+	uint8 index;
+	for(index = 0; index < PASSCODE_SIZE ; index++)
+	{
+		if(password[index] != pass[index]){
+			return PASSWORD_NOT_MATCH;
+		}
+	}
+	return PASSWORD_MATCH;
 }

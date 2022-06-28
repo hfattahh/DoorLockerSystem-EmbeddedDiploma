@@ -29,20 +29,30 @@
 /*******************************************************************************
  *                      Global Variables                                       *
  *******************************************************************************/
+/*
+ * password -> array to hold password
+ * g_ticks	-> global variable to conunt timer ticks
+ *
+ */
 uint8 password[PASSCODE_SIZE] = {'\0'};
+uint8 g_ticks = 0;
 
 
-int main(void){
+
+int main(void)
+{
 	/* password[]  		-> array holds the entered password by user
 	 * confirmPassword[]-> array holds the confirmation password that entered by user
 	 * receivedByte     -> variable to hold byte that received from master throw UART
 	 * userInput		-> variable to get user input + or -
+	 * passwordCounter	-> variable to store numbers of wrong entered
 	 *
 	 */
 	uint8 password[PASSCODE_SIZE] = {'\0'};
 	uint8 confirmPassword[PASSCODE_SIZE] = {'\0'};
 	uint8 receivedByte = DUMMY_CHAR;
 	uint8 userInput = DUMMY_CHAR;
+	uint8 passwordCounter = 0;
 
 	/*initialize the LCD*/
 	LCD_init();
@@ -93,6 +103,8 @@ int main(void){
 
 	while(1)
 	{
+		/*clear receivedByte variable*/
+		receivedByte = DUMMY_CHAR;
 		/*
 		 * display +, and -
 		 * wait for user input
@@ -102,25 +114,102 @@ int main(void){
 		 * **** the user if wrong password was entered
 		 */
 		LCD_clearScreen();
-		LCD_displayString("+  Open Door");
+		LCD_displayString("+Open Door");
 		LCD_moveCursor(1, 0);
-		LCD_displayString("-  Change Password");
+		LCD_displayString("-Change Password");
+		/*get user input using
+		 *KEYPAD_getPressedKey() function containing a tight polling
+		 */
 		userInput = KEYPAD_getPressedKey();
-		if(userInput == OPEN_DOOR)
+
+		/************************* serve user request ******************************/
+		if(userInput == OPEN_DOOR || userInput == SET_PASSWORD)
 		{
-			/*send open_door command throw UART*/
-			UART_sendByte(OPEN_DOOR);
+			while(passwordCounter < 3)
+			{
+				/*enter password by user and store it in an array*/
+				enter_passcode(password);
+				UART_sendByte(CHECK_PASSWORD_MATCH);
+				/***wait to control ECU to be ready***/
+				while(!(UART_recieveByte() == EUC2_READY));
+				/*send password to control ECU*/
+				send_password_to_control_ECU(password);
+				/*receive byte */
+				receivedByte = UART_recieveByte();
+				/*if password match serve the user*/
+				if(receivedByte == PASSWORD_MATCH)
+				{
 
+					switch(userInput)
+					{
+					case OPEN_DOOR:
+						/*send open_door command throw UART*/
+						UART_sendByte(OPEN_DOOR);
+						LCD_clearScreen();
+						LCD_displayString("Opening the door");
+						_delay_ms(50);
+						break;
+					case SET_PASSWORD:
+						/*dispaly setup new pass*/
+						LCD_clearScreen();
+						LCD_displayString("Set new pass");
+						_delay_ms(50);
+						/*repeat entering password until user enter 2 identical passwords*/
+						receivedByte = PASSWORD_NOT_IDENTICAL;
+
+						do
+						{
+							/*********************setting password*********************/
+							/*enter password by user and store it in an array*/
+							enter_passcode(password);
+							/*confirm password by user and store it in an array*/
+							enter_passcode(confirmPassword);
+							/******* SEND passwords to control ECU *******/
+							/*send set password command to control ECU*/
+							UART_sendByte(SET_PASSWORD);
+							/***wait to control ECU to be ready***/
+							while(!(UART_recieveByte() == EUC2_READY));
+							/*send password to control ECU*/
+							send_password_to_control_ECU(password);
+							/***wait to control ECU to be ready***/
+							while(!(UART_recieveByte() == EUC2_READY));
+							/*send password to control ECU*/
+							send_password_to_control_ECU(confirmPassword);
+							/*receive password IDENTICAL status from control ECU*/
+							receivedByte = UART_recieveByte();
+#ifdef TESTING_PAHSE
+							LCD_clearScreen();
+							LCD_displayString("PASSWORD NOT IDENTICAL!");
+#endif
+						}
+						while(receivedByte == PASSWORD_NOT_IDENTICAL);
+						break;
+					default:
+						break;
+					}/*end switch-case*/
+					break; /*break while loop if password match*/
+				}/*end if password match*/
+				/*else if password does not match increment password counter until 3*/
+				else
+				{
+					passwordCounter++;
+				}
+			}/*end while password counter <=3 */
 		}
-		else if (userInput == SET_PASSWORD)
-		{
-			/*send set_password command throw UART*/
-			UART_sendByte(SET_PASSWORD);
-
-
+		/*warning if wrong password entered for 3 times*/
+		if(passwordCounter >= 3){
+			/*Warning for 1 minute*/
+			/*initialize timer
+			 * wait for one minute
+			 */
+			while(g_ticks < 4 ){
+				LCD_clearScreen();
+				LCD_displayString("#####################");
+				_delay_ms(1000);
+			}
 		}
 
-	}
+	}/*end super loop*/
 }
 
 
@@ -167,7 +256,6 @@ void enter_passcode(uint8* passCodeString){
  * [Args] 			:
  * [in]        		: pointer to string (password)
  * [Returns] 		: No Returns
- *
  *
  **************************************************************************************************/
 void send_password_to_control_ECU(uint8* pass)
