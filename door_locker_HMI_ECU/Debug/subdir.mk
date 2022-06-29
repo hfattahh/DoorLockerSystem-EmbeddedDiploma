@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../buzzer.c \
 ../gpio.c \
 ../hmi_ecu.c \
 ../keypad.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 ../uart.c 
 
 OBJS += \
+./buzzer.o \
 ./gpio.o \
 ./hmi_ecu.o \
 ./keypad.o \
@@ -22,6 +24,7 @@ OBJS += \
 ./uart.o 
 
 C_DEPS += \
+./buzzer.d \
 ./gpio.d \
 ./hmi_ecu.d \
 ./keypad.d \

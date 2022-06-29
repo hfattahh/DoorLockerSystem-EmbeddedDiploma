@@ -21,9 +21,19 @@
  *                      Functions Prototypes                                   *
  *******************************************************************************/
 void enter_passcode(uint8*);
+
 void test_enter_passcode(uint8* passCodeString);
 
 void send_password_to_control_ECU(uint8* pass);
+
+/******************************************************************
+ * [Function Name] : timer0_handler
+ * [Description] : function to handle
+ * [Args] : non
+ * [in]: non
+ * [Returns] : non
+ ****************************************************/
+void timer0_handler(void);
 
 
 

@@ -53,6 +53,7 @@ uint8 check_password_match(uint8 *pass);
  * [Returns] : non
  ****************************************************/
 void timer0_handler(void);
+
 /******************************************************************
  * [Function Name] : open_door
  * [Description] : function to open the door using DC-motor

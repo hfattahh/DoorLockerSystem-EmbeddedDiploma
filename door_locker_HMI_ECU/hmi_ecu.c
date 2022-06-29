@@ -21,6 +21,7 @@
 #include "util/delay.h"
 #include "door_locker_protocol.h"
 #include "uart.h"
+#include "buzzer.h"
 
 #define TESTING_PAHSE
 
@@ -35,7 +36,7 @@
  *
  */
 uint8 password[PASSCODE_SIZE] = {'\0'};
-uint8 g_ticks = 0;
+uint8 g_timer0_ticks = 0;
 
 
 
@@ -58,9 +59,20 @@ int main(void)
 	LCD_init();
 	/*initialize UART with baud rate 9600*/
 	UART_init(9600);
+	/*initialize buzzer*/
+	BUZZER_INIT();
 
 	/*send check setting status command*/
 	UART_sendByte(CHECK_PASSWORD_SETTING);
+
+	/*enable i-bit*/
+	SREG |= (1<<7);
+	/*Configuration structure for timer0 CTC mode*/
+	TIMERS_ConfigType timer0_overflow_config = {F_CPU_1024, OVERFLOW_MODE, 5, NO_COMP_VALUE};
+	/*initialize timer */
+	TIMERS_init(&timer0_overflow_config, TIMER0_ID);
+	/*set call back function for timer0*/
+	TIMERS_setCallBack(timer0_handler, TIMER0_ID);
 
 	/*receive if password set or not*/
 	receivedByte = UART_recieveByte();
@@ -147,7 +159,7 @@ int main(void)
 						UART_sendByte(OPEN_DOOR);
 						LCD_clearScreen();
 						LCD_displayString("Opening the door");
-						_delay_ms(30000);
+						_delay_ms(90000);
 						break;
 					case SET_PASSWORD:
 						/*dispaly setup new pass*/
@@ -200,13 +212,18 @@ int main(void)
 		if(passwordCounter >= 3){
 			/*Warning for 1 minute*/
 			/*initialize timer
-			 * wait for one minute
+			 * wait for 1 minute
 			 */
-			while(g_ticks < 4 ){
-				LCD_clearScreen();
-				LCD_displayString("#####################");
-				_delay_ms(1000);
-			}
+			LCD_clearScreen();
+			LCD_displayString("#####################");
+			/*buzzer on*/
+			BUZZER_on();
+			GPIO_writePin(BUZZER_PORT_ID, BUZZER_PIN, LOGIC_HIGH);
+
+			/*wait for 1 minute*/
+			while(g_timer0_ticks < 240 );
+			/*buzzer off after 1 minute*/
+			BUZZER_off();
 		}
 
 	}/*end super loop*/
@@ -271,6 +288,18 @@ void test_enter_passcode(uint8* passCodeString){
 	LCD_displayString("Entered PassCode:");
 	LCD_moveCursor(1, 0);
 	LCD_displayString(passCodeString);
+}
+
+/******************************************************************
+ * [Function Name] : timer0_handler
+ * [Description] : function to handle
+ * [Args] : non
+ * [in]: non
+ * [Returns] : non
+ ****************************************************/
+void timer0_handler(void){
+	setTimerValue(TIMER0_ID, 5);
+	g_timer0_ticks++;
 }
 
 
