@@ -20,6 +20,8 @@
 #include "uart.h"
 #include "door_locker_protocol.h"
 #include "dcmotor.h"
+#include "external_eeprom.h"
+#include "twi.h"
 
 #define TESTING_PAHSE
 
@@ -54,6 +56,8 @@ int main(void){
 	/*set call back function for timer0*/
 	TIMERS_setCallBack(timer0_handler, TIMER0_ID);
 
+	/* Initialize the TWI/I2C Driver */
+	TWI_init();
 
 	/*initialize DC motor */
 	DcMotor_Init();
@@ -94,6 +98,11 @@ int main(void){
 				}
 			}
 			UART_sendByte(PASSWORD_IDENTICAL);
+			/*****store password to external EEPROM*****/
+			 /* change password setting state to 1 in a specific address in the external EEPROM */
+			 /* Write 0x0F in the external EEPROM */
+			EEPROM_writeByte(0x0311, 0x01);
+
 			break;
 		case CHECK_PASSWORD_MATCH:
 			UART_sendByte(EUC2_READY);
@@ -137,7 +146,14 @@ uint8 check_password_setting_status(void)
 	/*if there is one => return 1; (set)
 	 *if there is 0 => return 0 (not set)
 	 */
-	return 1; /*just in testing phase*/
+	uint8 status = 1;
+
+	/*write 1 just for test*/
+	EEPROM_writeByte(0x0311, 0x01);
+	_delay_ms(10);
+	/* Read 0x0F from the external EEPROM */
+	EEPROM_readByte(0x0311, &status);
+	return status; /*just in testing phase*/
 }
 
 /******************************************************************

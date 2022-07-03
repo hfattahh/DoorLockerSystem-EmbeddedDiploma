@@ -1,9 +1,14 @@
-02:10:36 **** Incremental Build of configuration Debug for project door_locker_HMI_ECU ****
+20:03:53 **** Incremental Build of configuration Debug for project door_locker_HMI_ECU ****
 make all 
 Building file: ../buzzer.c
 Invoking: AVR Compiler
 avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"buzzer.d" -MT"buzzer.o" -c -o "buzzer.o" "../buzzer.c"
 Finished building: ../buzzer.c
+ 
+Building file: ../gpio.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"gpio.d" -MT"gpio.o" -c -o "gpio.o" "../gpio.c"
+Finished building: ../gpio.c
  
 Building file: ../hmi_ecu.c
 Invoking: AVR Compiler
@@ -13,6 +18,40 @@ c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warnin
 ../hmi_ecu.c: In function 'test_enter_passcode':
 ../hmi_ecu.c:290: warning: pointer targets in passing argument 1 of 'LCD_displayString' differ in signedness
 Finished building: ../hmi_ecu.c
+ 
+Building file: ../keypad.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"keypad.d" -MT"keypad.o" -c -o "keypad.o" "../keypad.c"
+../keypad.c:135:28: warning: multi-character character constant
+../keypad.c: In function 'KEYPAD_4x4_adjustKeyNumber':
+../keypad.c:135: warning: large integer implicitly truncated to unsigned type
+Finished building: ../keypad.c
+ 
+Building file: ../lcd.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"lcd.d" -MT"lcd.o" -c -o "lcd.o" "../lcd.c"
+In file included from ../lcd.c:17:
+c:/winavr-20100110/lib/gcc/../../avr/include/util/delay.h:90:3: warning: #warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+Finished building: ../lcd.c
+ 
+Building file: ../timer0_driver_test.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"timer0_driver_test.d" -MT"timer0_driver_test.o" -c -o "timer0_driver_test.o" "../timer0_driver_test.c"
+Finished building: ../timer0_driver_test.c
+ 
+Building file: ../timers.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"timers.d" -MT"timers.o" -c -o "timers.o" "../timers.c"
+../timers.c: In function 'TIMERS_setCallBack':
+../timers.c:110: warning: function return types not compatible due to 'volatile'
+../timers.c:112: warning: function return types not compatible due to 'volatile'
+../timers.c:114: warning: function return types not compatible due to 'volatile'
+Finished building: ../timers.c
+ 
+Building file: ../uart.c
+Invoking: AVR Compiler
+avr-gcc -Wall -g2 -gstabs -O0 -fpack-struct -fshort-enums -ffunction-sections -fdata-sections -std=gnu99 -funsigned-char -funsigned-bitfields -mmcu=atmega16 -DF_CPU=1000000UL -MMD -MP -MF"uart.d" -MT"uart.o" -c -o "uart.o" "../uart.c"
+Finished building: ../uart.c
  
 Building target: door_locker_HMI_ECU.elf
 Invoking: AVR C Linker
@@ -39,5 +78,5 @@ Data:        179 bytes (17.5% Full)
 Finished building: sizedummy
  
 
-02:10:37 Build Finished. 0 errors, 2 warnings. (took 783ms)
+20:03:55 Build Finished. 0 errors, 8 warnings. (took 2s.412ms)
 

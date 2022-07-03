@@ -6,8 +6,12 @@
 		<item key="wholeword" value="false"/>
 		<item key="incremental" value="false"/>
 		<item key="isRegEx" value="false"/>
-		<item key="selection" value="LCD_display"/>
+		<item key="selection" value="open_door("/>
 		<list key="findhistory">
+			<item value="open_door("/>
+			<item value="open_door"/>
+			<item value="no_tics_per_second_in_overflow"/>
+			<item value="door"/>
 			<item value="LCD_display"/>
 			<item value="g_ticks"/>
 			<item value="-"/>
@@ -23,8 +27,8 @@
 		</list>
 	</section>
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
-		<item key="DIALOG_X_ORIGIN" value="956"/>
-		<item key="DIALOG_Y_ORIGIN" value="295"/>
+		<item key="DIALOG_X_ORIGIN" value="662"/>
+		<item key="DIALOG_Y_ORIGIN" value="256"/>
 		<item key="DIALOG_WIDTH" value="414"/>
 		<item key="DIALOG_HEIGHT" value="454"/>
 		<item key="DIALOG_FONT_NAME" value="1|Segoe UI|9.0|0|WINDOWS|1|-15|0|0|0|400|0|0|0|1|0|0|0|0|Segoe UI"/>
