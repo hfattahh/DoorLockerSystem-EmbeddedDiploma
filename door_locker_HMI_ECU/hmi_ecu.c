@@ -23,7 +23,8 @@
 #include "uart.h"
 #include "buzzer.h"
 
-#define TESTING_PAHSE
+//#define TESTING_PAHSE
+#define SHOW_PASSWORD
 
 
 
@@ -225,7 +226,7 @@ int main(void)
 			/*buzzer off after 1 minute*/
 			BUZZER_off();
 		}
-
+		_delay_ms(3);
 	}/*end super loop*/
 }
 
@@ -252,20 +253,19 @@ void enter_passcode(uint8* passCodeString){
 	{
 		/*save the pressed button on keypad to pass code array*/
 		passCodeString[key] = KEYPAD_getPressedKey();
+#ifdef SHOW_PASSWORD
+		/*to display entered character*/
 		LCD_displayCharacter(passCodeString[key]);
+#else
+		/*to display '*' when enter a new character*/
+		LCD_displayCharacter('*');
+#endif
 		_delay_ms(220);
 	}
 	LCD_clearScreen();
 	passCodeString[PASSCODE_SIZE-1] = '\0';
 
 }
-
-/*
- * function to check if the password was set or not
- * if set => continue
- * not set => set the password
- * function to
- */
 
 /************************************************************************************************
  * [Function Name] 	: send_password_to_control_ECU

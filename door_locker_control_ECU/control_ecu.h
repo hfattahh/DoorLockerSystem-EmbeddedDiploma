@@ -16,6 +16,9 @@
 
 #include "std_types.h"
 
+#define SET_PASSWORD_STATUS_ADDRESS 0x0311
+#define PASSWORD_START_ADDRESS 0x0312
+
 /***********************************************************************
  * [Function Name] : check_password_setting_status
  * [Description] : check on specific address if the password is set or not

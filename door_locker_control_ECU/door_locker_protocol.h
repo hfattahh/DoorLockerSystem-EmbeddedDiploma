@@ -44,6 +44,4 @@
 #define DUMMY_CHAR 'D'
 
 
-
-
 #endif /*DOOR_LOCKER_PROTOCOL_H*/

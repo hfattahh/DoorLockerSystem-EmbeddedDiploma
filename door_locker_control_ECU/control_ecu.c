@@ -23,7 +23,7 @@
 #include "external_eeprom.h"
 #include "twi.h"
 
-#define TESTING_PAHSE
+//#define SET_PASSWORD_STATUS_TEST
 
 /*******************************************************************************
  *                      Global Variables                                       *
@@ -58,6 +58,8 @@ int main(void){
 
 	/* Initialize the TWI/I2C Driver */
 	TWI_init();
+
+
 
 	/*initialize DC motor */
 	DcMotor_Init();
@@ -99,9 +101,14 @@ int main(void){
 			}
 			UART_sendByte(PASSWORD_IDENTICAL);
 			/*****store password to external EEPROM*****/
-			 /* change password setting state to 1 in a specific address in the external EEPROM */
-			 /* Write 0x0F in the external EEPROM */
-			EEPROM_writeByte(0x0311, 0x01);
+			/*store password in eeprom*/
+			for(index = 0; index < PASSCODE_SIZE ; index++){
+				/* Write password in the external EEPROM */
+				EEPROM_writeByte(PASSWORD_START_ADDRESS+index, password[index]);
+				_delay_ms(10);
+			}
+			/* change password setting state to 1 in a specific address in the external EEPROM */
+			EEPROM_writeByte(SET_PASSWORD_STATUS_ADDRESS, 0x01);
 
 			break;
 		case CHECK_PASSWORD_MATCH:
@@ -146,13 +153,15 @@ uint8 check_password_setting_status(void)
 	/*if there is one => return 1; (set)
 	 *if there is 0 => return 0 (not set)
 	 */
-	uint8 status = 1;
+	uint8 status;
 
 	/*write 1 just for test*/
-	EEPROM_writeByte(0x0311, 0x01);
-	_delay_ms(10);
+#ifdef SET_PASSWORD_STATUS_TEST
+		EEPROM_writeByte(SET_PASSWORD_STATUS_ADDRESS, 0x01);
+		_delay_ms(10);
+#endif
 	/* Read 0x0F from the external EEPROM */
-	EEPROM_readByte(0x0311, &status);
+	EEPROM_readByte(SET_PASSWORD_STATUS_ADDRESS, &status);
 	return status; /*just in testing phase*/
 }
 
@@ -179,15 +188,20 @@ void receive_password_from_HMI(uint8 *pass)
  ****************************************************/
 uint8 check_password_match(uint8 *pass)
 {
+	uint8 index;
 #ifdef TESTING_PAHSE
 	uint8 password [PASSCODE_SIZE]= {'2','2','2','2','2','\0'};
-#elif
+#else
 	uint8 password[PASSCODE_SIZE]; /*to get passord from eeprom*/
+	for(index = 0; index < PASSCODE_SIZE ; index++){
+		/* Write password in the external EEPROM */
+		EEPROM_readByte(PASSWORD_START_ADDRESS+index, (password+index));
+		_delay_ms(10);
+	}
 #endif
 	/*
 	 * password => get stored password from EEPROM
 	 */
-	uint8 index;
 	for(index = 0; index < PASSCODE_SIZE ; index++)
 	{
 		if(password[index] != pass[index]){
